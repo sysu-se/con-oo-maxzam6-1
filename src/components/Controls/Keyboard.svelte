@@ -1,27 +1,25 @@
 <script>
-	import { userGrid } from '@sudoku/stores/grid';
 	import { cursor } from '@sudoku/stores/cursor';
 	import { notes } from '@sudoku/stores/notes';
 	import { candidates } from '@sudoku/stores/candidates';
-
-	// TODO: Improve keyboardDisabled
 	import { keyboardDisabled } from '@sudoku/stores/keyboard';
+	import { gameStore } from '../../domain/store.js';
 
 	function handleKeyButton(num) {
-		if (!$keyboardDisabled) {
+		if (!$keyboardDisabled && $cursor.x !== null && $cursor.y !== null) {
 			if ($notes) {
 				if (num === 0) {
 					candidates.clear($cursor);
 				} else {
 					candidates.add($cursor, num);
 				}
-				userGrid.set($cursor, 0);
+				gameStore.guess($cursor.y, $cursor.x, 0);
 			} else {
 				if ($candidates.hasOwnProperty($cursor.x + ',' + $cursor.y)) {
 					candidates.clear($cursor);
 				}
 
-				userGrid.set($cursor, num);
+				gameStore.guess($cursor.y, $cursor.x, num);
 			}
 		}
 	}
